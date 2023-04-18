@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LA Crime Data Statistics</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<nav class ="navbar">
+		<div class="navbar__container">
+			<a href="#" id="navbar__logo"><img src="images/Logo.png" alt="Logo that is a different colored square, circle, and triangle overlapping"></a>
+			<div class="navbar__toggle" id="mobile-menu">
+				<span class="bar"></span>
+				<span class="bar"></span>
+				<span class="bar"></span>
+			</div>
+			<ul class="navbar__menu">
+				<li class="navbar__item">
+					<a href="index.html" class="navbar__links">Home</a>
+				</li>
+				<li class="navbar__item">
+					<a href="About.html" class="navbar__links">About</a>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="navbar__links">Trends</a>
+					<div class="dropdown-cont">
+						<a href="ArrestsByRace.html">Arrests by Race</a>
+						<a href="TheftBySeason.html">Theft by Season</a>
+						<a href="GunCrimes.html">Gun Crimes</a>
+						<a href="FemaleVictims.html">Female Victims</a>
+						<a href="CrimeByLocation.html">Crime by Location</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<!-- Intro Section -->
+	<div class="main">
+		<div class="grid__container__left">
+			<div class="grid__content">
+				<h1><u>Arrests By Race</u></h1>
+				<p>Here is a paragraph about crime data trends</p>
+				<form name="ArrestsByRace_Form">
+					<select name="ArrestsByRace_Input" id="ArrestsByRace_Input" onchange="this.form.submit()">
+						<option value="Station1">Police Station 1</option>
+						<option value="Station2">Police Station 2</option>
+						<option value="Station3">Police Station 3</option>
+						<option value="Station4">Police Station 4</option>
+						<option value="Station5">Police Station 5</option>
+						<option value="Station6">Police Station 6</option>
+						<option value="Station7">Police Station 7</option>
+						<option value="Station8">Police Station 8</option>
+						<option value="Station9">Police Station 9</option>
+						<option value="Station16">Police Station 10</option>
+						<option value="Station10">Police Station 11</option>
+						<option value="Station11">Police Station 12</option>
+						<option value="Station12">Police Station 13</option>
+						<option value="Station13">Police Station 14</option>
+						<option value="Station14">Police Station 15</option>
+						<option value="Station15">Police Station 16</option>
+						<option value="Station17">Police Station 17</option>
+						<option value="Station18">Police Station 18</option>
+						<option value="Station19">Police Station 19</option>
+						<option value="Station20">Police Station 20</option>
+						<option value="Station21">Police Station 21</option>
+					</select>
+				</form>
+			</div>
+			<div class="grid__content">
+				<img src="images/IndexGraphic.png" alt="Wavy line graph with red and blue gradients">
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Footer -->
+	<footer>
+		<hr>
+		<div class="footer__content">
+			CIS4301 - Information and Database Systems, Group 28, All rights reserved ©
+		</div>
+	</footer>
+</body>
+</html>

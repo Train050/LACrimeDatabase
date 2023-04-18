@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LA Crime Data Statistics</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<nav class ="navbar">
+		<div class="navbar__container">
+			<a href="#" id="navbar__logo"><img src="images/Logo.png" alt="Logo that is a different colored square, circle, and triangle overlapping"></a>
+			<div class="navbar__toggle" id="mobile-menu">
+				<span class="bar"></span>
+				<span class="bar"></span>
+				<span class="bar"></span>
+			</div>
+			<ul class="navbar__menu">
+				<li class="navbar__item">
+					<a href="index.html" class="navbar__links">Home</a>
+				</li>
+				<li class="navbar__item">
+					<a href="About.html" class="navbar__links">About</a>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="navbar__links">Trends</a>
+					<div class="dropdown-cont">
+						<a href="ArrestsByRace.html">Arrests by Race</a>
+						<a href="TheftBySeason.html">Theft by Season</a>
+						<a href="GunCrimes.html">Gun Crimes</a>
+						<a href="FemaleVictims.html">Female Victims</a>
+						<a href="CrimeByLocation.html">Crime by Location</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<!-- Intro Section -->
+	<div class="main">
+		<div class="grid__container__left">
+			<div class="grid__content">
+				<h1><u>Crime Data Trends</u></h1>
+				<p>&emsp;Our project focuses on a set of crime data from Los Angeles from the years 2019 to present. We intend to use this data to form a database and website that will show the trends in crimes in Los Angeles. During 2020, many individuals realized the implicit biases and injustices that reside with United States law enforcement. Our project not only aims to visualize and present trends relating to crime in general, but also the issues that may exist in our justice system.</p>
+				<p>&emsp;We will present trends pertaining to arrests by race, theft by season, gun crime by month, female victims by age group, and crime rates by location. We feel that analyzing these trends can help to highlight the issues persisting towards these groups and inspire change.</p>
+				<div class="button"><a href="#trends" class="button__text">View Trends Now</a></div>
+			</div>
+			<div class="grid__content">
+				<img src="images/IndexGraphic.png" alt="Wavy line graph with red and blue gradients">
+			</div>
+		</div>
+	</div>
+	<div class="icon">
+		<img src="images/icons8-down-64.png" alt="Down arrow">
+	</div>
+
+	<!--List Trends-->
+	<div class="trends" id="trends">
+		<div class="grid__container__right">
+			<div class="grid__content">
+				<div class="content__container">
+					<ul>
+						<li class="trendlist__item"><div class="button"><a href="#" class="button__text">Arrests by Race</a></div></li>
+						<li class="trendlist__item"><div class="button__alt1"><a href="#" class="button__text">Theft by Season</a></div></li>
+						<li class="trendlist__item"><div class="button__alt2"><a href="#" class="button__text">Gun Crimes</a></div></li>
+						<li class="trendlist__item"><div class="button__alt3"><a href="#" class="button__text">Female Victims</a></div></li>
+						<li class="trendlist__item"><div class="button__alt4"><a href="#" class="button__text_alt4">Crime by Location</a></div></li>
+					</ul>
+				</div>
+			</div>
+			<div class="grid__content">
+				<h1><u>Trends</u></h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+				<p>Nullam quis euismod dui, semper viverra odio. Ut vitae erat finibus, egestas tortor ac, </p>
+				<p>Pellentesque placerat malesuada nisl et elementum. Praesent velit tellus, bibendum vitae tristique non,</p>
+				<p>Nunc sapien eros, hendrerit ut tellus quis, viverra cursus mi. Cras sed massa non nunc vulputate suscipit.</p>	
+				<p>Nunc at quam vitae ligula vestibulum porta vitae ut turpis. Mauris non urna tempor diam maximus accumsan.</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<footer>
+		<hr>
+		<div class="footer__content">
+			CIS4301 - Information and Database Systems, Group 28, All rights reserved ©
+		</div>
+	</footer>
+</body>
+</html>
