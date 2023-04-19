@@ -6,6 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>LA Crime Data Statistics</title>
 	<link rel="stylesheet" href="styles.css">
+	<script type="module" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script type="module" src="app.js"></script>
 </head>
 <body>
 	<nav class ="navbar">
@@ -18,19 +20,19 @@
 			</div>
 			<ul class="navbar__menu">
 				<li class="navbar__item">
-					<a href="index.html" class="navbar__links">Home</a>
+					<a href="/index" class="navbar__links">Home</a>
 				</li>
 				<li class="navbar__item">
-					<a href="About.html" class="navbar__links">About</a>
+					<a href="/about" class="navbar__links">About</a>
 				</li>
 				<li class="dropdown">
 					<a href="#" class="navbar__links">Trends</a>
 					<div class="dropdown-cont">
-						<a href="ArrestsByRace.html">Arrests by Race</a>
-						<a href="TheftBySeason.html">Theft by Season</a>
-						<a href="GunCrimes.html">Gun Crimes</a>
-						<a href="FemaleVictims.html">Female Victims</a>
-						<a href="CrimeByLocation.html">Crime by Location</a>
+						<a href="/arrestsbyrace">Arrests by Race</a>
+						<a href="/theftbyseason">Theft by Season</a>
+						<a href="/guncrimes">Gun Crimes</a>
+						<a href="/femalevictims">Female Victims</a>
+						<a href="/crimebylocation">Crime by Location</a>
 					</div>
 				</li>
 			</ul>
@@ -70,7 +72,7 @@
 				</form>
 			</div>
 			<div class="grid__content">
-				<img src="images/IndexGraphic.png" alt="Wavy line graph with red and blue gradients">
+				<canvas id="ABRChart"></canvas>
 			</div>
 		</div>
 	</div>
