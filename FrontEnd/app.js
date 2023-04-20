@@ -8,6 +8,9 @@ const monthsOfTheYear = ['January','February','March','April','May','June','July
 //Set Chart.js Default configs
 Chart.defaults.color = 'rgb(255,255,255)';
 Chart.defaults.font.family = 'Coolvetica';
+Chart.defaults.font.weight = 'normal';
+Chart.defaults.plugins.title.font.size = 24;
+
 
 
 async function getJSON(query){
@@ -21,84 +24,88 @@ document.addEventListener("DOMContentLoaded", (event) =>{
 
     if(ABR){
         let policeStation = '1';
+        const windowQuery = new URLSearchParams(window.location.search);
+
+        if (windowQuery.has('ArrestsByRace_Input')){
+            policeStation = windowQuery.get('ArrestsByRace_Input').replace('Station', '');
+
+            //Making sure the input matches the value
+            document.getElementById('ArrestsByRace_Input').value = windowQuery.get('ArrestsByRace_Input');
+        }
+
+        let bData = [];
+        let wData = [];
+        let aData = [];
+        let lData = [];
+
+        const data = {
+            datasets: [{
+                label: 'Black',
+                data: bData,
+                backgroundColor: 'rgb(50,120,205)',
+                borderColor: 'rgb(50,120,205)'
+            }, {
+                label: 'White',
+                data:  wData,
+                backgroundColor: 'rgb(255,225,25)',
+                borderColor: 'rgb(255,225,25)'
+
+            }, {
+                label: 'Asian',
+                data:  aData,
+                backgroundColor: 'rgb(35,205,75)',
+                borderColor: 'rgb(35,205,75)'
+
+            }, {
+                label: 'Latine',
+                data: lData,
+                backgroundColor: 'rgb(255,95,95)',
+                borderColor: 'rgb(255,95,95)'
+            }],
+        };
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                scales: {
+                    x: {
+                        type: 'category',
+                        labels: monthsOfTheYear,
+
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Arrests',
+
+                        },
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        font: {
+                            size: 24,
+
+                        },
+                        text: `Arrests by Police Station ${policeStation}`
+
+                    }
+                }
+
+            },
+        };
+        let abrChart = new Chart(ABR, config);
 
         getJSON("SELECT_*_FROM_CRIMEDATA").then(function (jsonData) {
-            let bData = [];
-            let wData = [];
-            let aData = [];
-            let lData = [];
-
-
             for (let i = 0; i < jsonData.results.length; i++){
                 bData[i] = {x: jsonData.results[i].DRNO, y: i};
                 aData[i] = {x: i, y: i*2};
                 wData[i] = {x: i, y: i*3};
                 lData[i] = {x: i, y: i*4};
             }
-
-
-
-            const data = {
-                datasets: [{
-                    label: 'Black',
-                    data: bData,
-                    backgroundColor: 'rgb(50,120,205)',
-                    borderColor: 'rgb(50,120,205)'
-                }, {
-                    label: 'White',
-                    data:  wData,
-                    backgroundColor: 'rgb(255,225,25)',
-                    borderColor: 'rgb(255,225,25)'
-
-                }, {
-                    label: 'Asian',
-                    data:  aData,
-                    backgroundColor: 'rgb(35,205,75)',
-                    borderColor: 'rgb(35,205,75)'
-
-                }, {
-                    label: 'Latine',
-                    data: lData,
-                    backgroundColor: 'rgb(255,95,95)',
-                    borderColor: 'rgb(255,95,95)'
-                }],
-            };
-            const config = {
-                type: 'line',
-                data: data,
-                options: {
-                    scales: {
-                        x: {
-                            type: 'category',
-                            labels: monthsOfTheYear,
-
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Arrests',
-                                font: {
-                                    weight: 'normal',
-                                }
-                            },
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        title: {
-                            display: true,
-                            font: {
-                                size: 24,
-                                weight: 'normal'
-                            },
-                            text: `Arrests by Police Station ${policeStation}`
-
-                        }
-                    }
-
-                },
-            };
-            new Chart(ABR, config);
+            abrChart.update();
         });
     }
 
