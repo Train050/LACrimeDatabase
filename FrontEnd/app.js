@@ -8,6 +8,9 @@ const monthsOfTheYear = ['January','February','March','April','May','June','July
 //Set Chart.js Default configs
 Chart.defaults.color = 'rgb(255,255,255)';
 Chart.defaults.font.family = 'Coolvetica';
+Chart.defaults.font.weight = 'normal';
+Chart.defaults.plugins.title.font.size = 24;
+
 
 
 async function getJSON(query){
@@ -21,6 +24,14 @@ document.addEventListener("DOMContentLoaded", (event) =>{
 
     if(ABR){
         let policeStation = '1';
+        const windowQuery = new URLSearchParams(window.location.search);
+
+        if (windowQuery.has('ArrestsByRace_Input')){
+            policeStation = windowQuery.get('ArrestsByRace_Input').replace('Station', '');
+
+            //Making sure the input matches the value
+            document.getElementById('ArrestsByRace_Input').value = windowQuery.get('ArrestsByRace_Input');
+        }
 
         getJSON("SELECT_*_FROM_CRIMEDATA").then(function (jsonData) {
             let bData = [];
@@ -77,9 +88,7 @@ document.addEventListener("DOMContentLoaded", (event) =>{
                             title: {
                                 display: true,
                                 text: 'Arrests',
-                                font: {
-                                    weight: 'normal',
-                                }
+
                             },
                             beginAtZero: true
                         }
@@ -89,7 +98,7 @@ document.addEventListener("DOMContentLoaded", (event) =>{
                             display: true,
                             font: {
                                 size: 24,
-                                weight: 'normal'
+
                             },
                             text: `Arrests by Police Station ${policeStation}`
 
