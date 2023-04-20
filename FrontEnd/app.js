@@ -1,5 +1,5 @@
 
-let ABR, CBL, FV, GC, TBS
+let ABR, CBL, FV, GC, TBS, TupleButton;
 const baseURL = window.location.origin;
 
 //Labels to use
@@ -20,6 +20,20 @@ async function getJSON(query){
 
 document.addEventListener("DOMContentLoaded", (event) =>{
 
+    TupleButton = document.getElementById("tuplecount");
+
+    if (TupleButton) {
+        TupleButton.onclick = (event) => {
+            if (event.button === 0) {
+                getJSON("SELECT_COUNT(*)_AS_tupCount_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"").then(function (jsonData) {
+                    window.alert("Tuple Count is equal to: " + jsonData.results[0].TUPCOUNT);
+                })
+            }
+
+        };
+    }
+
+
     ABR = document.getElementById("ABRChart");
 
     if(ABR){
@@ -37,6 +51,13 @@ document.addEventListener("DOMContentLoaded", (event) =>{
         let wData = [];
         let aData = [];
         let lData = [];
+
+        for (let i = 0; i < 12; i++){
+            bData[i] = 0;
+            wData[i] = 0;
+            aData[i] = 0;
+            lData[i] = 0;
+        }
 
         const data = {
             datasets: [{
@@ -98,12 +119,49 @@ document.addEventListener("DOMContentLoaded", (event) =>{
         };
         let abrChart = new Chart(ABR, config);
 
-        getJSON("SELECT_*_FROM_CRIMEDATA").then(function (jsonData) {
+        getJSON("SELECT_EXTRACT(MONTH_FROM_DateReported)_AS_\"Month\",_Area as_\"Police Station\",_VictimDescent_as_\"Ethnicity\",_COUNT(*)_AS_\"Total Arrests\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_VictimDescent_!=_'0'_GROUP_BY_EXTRACT(MONTH_FROM_DateReported),_Area,_VictimDescent_ORDER_BY_EXTRACT(MONTH_FROM_DateReported)_ASC,_Area_ASC,_VictimDescent_ASC").then(function (jsonData) {
             for (let i = 0; i < jsonData.results.length; i++){
-                bData[i] = {x: jsonData.results[i].DRNO, y: i};
-                aData[i] = {x: i, y: i*2};
-                wData[i] = {x: i, y: i*3};
-                lData[i] = {x: i, y: i*4};
+
+                switch (jsonData.results[i].Ethnicity) {
+                    case "A":
+                    case "J":
+                    case "C":
+                    case "F":
+                    case "D":
+                    case "K":
+                    case "L":
+                    case "V":
+                    case "Z":
+                        if (policeStation == jsonData.results[i]["Police Station"]) {
+                            if (typeof aData[jsonData.results[i].Month - 1] == "object"){
+                                aData[jsonData.results[i].Month - 1].y += jsonData.results[i]["Total Arrests"];
+                            }
+                            else {
+                                aData[jsonData.results[i].Month - 1] = {x: jsonData.results[i].Month, y: jsonData.results[i]["Total Arrests"]};
+                            }
+                        }
+                        break;
+                    case "B" :
+                        if (policeStation == jsonData.results[i]["Police Station"]) {
+                            bData[jsonData.results[i].Month - 1] = {x: jsonData.results[i].Month, y: jsonData.results[i]["Total Arrests"]};
+                        }
+                        break;
+                    case "W":
+                        if (policeStation == jsonData.results[i]["Police Station"]) {
+                            wData[jsonData.results[i].Month - 1] ={x: jsonData.results[i].Month, y: jsonData.results[i]["Total Arrests"]};
+                        }
+                        break;
+                    case "H":
+                        if (policeStation == jsonData.results[i]["Police Station"]) {
+                            lData[jsonData.results[i].Month - 1] = {x: jsonData.results[i].Month, y: jsonData.results[i]["Total Arrests"]};
+                        }
+
+                        break;
+                    default:
+                        //TODO: Add Pacific Islander
+
+
+                }
             }
             abrChart.update();
         });
