@@ -45,12 +45,17 @@
 			<div class="grid__content">
 				<h1><u>Theft by Season <br> in 2020</u></h1>
 				<p>Here is a paragraph about crime data trends</p>
-				<form name="TheftType_Form">
+				<!-- <form name="TheftType_Form">
 					<input type="radio" id="PettyTheft" name="TheftType" value="PettyTheft" checked>
 					<label for="PettyTheft">Petty Theft</label>
 					<input type="radio" id="GrandTheft" name="TheftType" value="GrandTheft">
 					<label for="GrandTheft">Grand Theft</label>
-				</form>
+				</form> -->
+				<div>
+					<span>2020</span>
+					<span style="float:right;">2023</span>
+				</div>
+				<input type="range" min="2020" max="2023" value="2020" class="slider" id="TheftBySeason_Input">
 			</div>
 			<div class="grid__content">
 				<canvas id="TBSChart"></canvas>
