@@ -245,54 +245,41 @@ document.addEventListener("DOMContentLoaded", (event) =>{
 
     FV = document.getElementById("FVChart");
 
-    let fvDataWeek = [10, 30, 20, 10, 5];
-    let fvDataMonth = [20, 40, 30, 20, 10];
-    let fvDataSeason = [30, 50, 40, 30, 20];
-
-    const weekCheck = document.getElementById("PerWeek");
-    const monthCheck = document.getElementById("PerMonth");
-    const seasonCheck = document.getElementById("PerSeason");
-
-    weekCheck.addEventListener('change', (event) => {
-        if (event.currentTarget.checked) {
-
-        }
-    });
-
-    monthCheck.addEventListener('change', (event) => {
-        if (event.currentTarget.checked) {
-
-        }
-    });
-
-
-    seasonCheck.addEventListener('change', (event) => {
-        if (event.currentTarget.checked) {
-
-        }
-    });
-
     if(FV){
+        let fvDataWeek = [];
+        let fvDataMonth = [];
+        let fvDataSeason = [];
+        for (let i = 0; i < 5; i++){
+            fvDataWeek[i] = 0;
+            fvDataMonth[i] = 0;
+            fvDataSeason[i] = 0;
+        }
+
+        const weekCheck = document.getElementById("PerWeek");
+        const monthCheck = document.getElementById("PerMonth");
+        const seasonCheck = document.getElementById("PerSeason");
+
+
         const labels = ['Gen Z (0-26)', 'Millennial (27-42)', 'Gen X (43-58)', 'Boomers II (59-68)', 'Boomers I (69+)'];
         const data = {
             labels: labels,
             datasets: [{
                 label: 'Week',
-                data: [fvDataWeek[0], fvDataWeek[1], fvDataWeek[2], fvDataWeek[3], fvDataWeek[4]],
+                data: fvDataWeek,
                 backgroundColor: [colorScheme[0]],
                 borderColor: [colorScheme[0]],
                 borderWidth: 1
             },
             {
                 label: 'Month',
-                data: [fvDataMonth[0], fvDataMonth[1], fvDataMonth[2], fvDataMonth[3], fvDataMonth[4]],
+                data: fvDataMonth,
                 backgroundColor: [colorScheme[3]],
                 borderColor: [colorScheme[3]],
                 borderWidth: 1
             },
             {
                 label: 'Season',
-                data: [fvDataMonth[0], fvDataMonth[1], fvDataMonth[2], fvDataMonth[3], fvDataMonth[4]],
+                data: fvDataSeason,
                 backgroundColor: [colorScheme[1]],
                 borderColor: [colorScheme[1]],
                 borderWidth: 1
@@ -334,9 +321,58 @@ document.addEventListener("DOMContentLoaded", (event) =>{
             },
         };
         let fvChart = new Chart(FV, config);
+        async function updateFVChart() {
+            getJSON("SELECT_TO_CHAR(DateOcured,_\'WW\')_AS_\"Week\",_SUM(CASE_WHEN_VictimSex_=_\'F\'_THEN_1_ELSE_0_END)_AS_\"Total_Females\",_(CASE_WHEN_VictimAge_BETWEEN_0_AND_26_THEN_\'Gen_Z\'_WHEN_VictimAge_BETWEEN_27_AND_42_THEN_\'Millennial\'_WHEN_VictimAge_BETWEEN_43_AND_58_THEN_\'Gen_X\'_WHEN_VictimAge_BETWEEN_59_AND_68_THEN_\'Boomers_II\'_ELSE_\'Boomers_I\'_END)_As_\"Generation\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_DateOcured_BETWEEN_\'01-JAN-2020\'_AND_\'31-DEC-2020\'_AND_VictimAge_BETWEEN_0_AND_100_GROUP_BY_TO_CHAR(DateOcured,_\'WW\'),_(CASE_WHEN_VictimAge_BETWEEN_0_AND_26_THEN_\'Gen_Z\'_WHEN_VictimAge_BETWEEN_27_AND_42_THEN_\'Millennial\'_WHEN_VictimAge_BETWEEN_43_AND_58_THEN_\'Gen_X\'_WHEN_VictimAge_BETWEEN_59_AND_68_THEN_\'Boomers_II\'_ELSE_\'Boomers_I\'_END)_ORDER_BY_TO_CHAR(DateOcured,_\'WW\')_ASC,_SUM((CASE_WHEN_VictimSex_=_\'F\'_THEN_1_ELSE_0_END))_DESC").then(function (jsonData) {
 
-        getJSON("SELECT_TO_CHAR(DateOcured,_\'WW\')_AS_\"Week\",_SUM(CASE_WHEN_VictimSex_=_\'F\'_THEN_1_ELSE_0_END)_AS_\"Total_Females\",_(CASE_WHEN_VictimAge_BETWEEN_0_AND_26_THEN_\'Gen_Z\'_WHEN_VictimAge_BETWEEN_27_AND_42_THEN_\'Millennial\'_WHEN_VictimAge_BETWEEN_43_AND_58_THEN_\'Gen_X\'_WHEN_VictimAge_BETWEEN_59_AND_68_THEN_\'Boomers_II\'_ELSE_\'Boomers_I\'_END)_As_\"Generation\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_DateOcured_BETWEEN_\'01-JAN-2020\'_AND_\'31-DEC-2020\'_AND_VictimAge_BETWEEN_0_AND_100_GROUP_BY_TO_CHAR(DateOcured,_\'WW\'),_(CASE_WHEN_VictimAge_BETWEEN_0_AND_26_THEN_\'Gen_Z\'_WHEN_VictimAge_BETWEEN_27_AND_42_THEN_\'Millennial\'_WHEN_VictimAge_BETWEEN_43_AND_58_THEN_\'Gen_X\'_WHEN_VictimAge_BETWEEN_59_AND_68_THEN_\'Boomers_II\'_ELSE_\'Boomers_I\'_END)_ORDER_BY_TO_CHAR(DateOcured,_\'WW\')_ASC,_SUM((CASE_WHEN_VictimSex_=_\'F\'_THEN_1_ELSE_0_END))_DESC").then(function(jsonData){
+                for (let i = 0; i < jsonData.results.length; i++) {
+                    let xVal;
+                    switch (jsonData.results[i].Generation) {
+                        case "Gen Z":
+                            xVal = 0;
+                            break;
+                        case "Millennial":
+                            xVal = 1;
+                            break;
+                        case "Gen X":
+                            xVal = 2;
+                            break;
+                        case "Boomers II":
+                            xVal = 3;
+                            break;
+                        case "Boomers I":
+                            xVal = 4;
+                            break;
+                    }
 
+                    fvDataWeek[xVal] += jsonData.results[i]["Total Females"];
+                    fvDataMonth[xVal] += jsonData.results[i]["Total Females"];
+                    fvDataSeason[xVal] += jsonData.results[i]["Total Females"];
+                }
+                for (let i = 0; i < 5; i++){
+                    fvDataWeek[i] /= 53;
+                    fvDataMonth[i] /= 12;
+                    fvDataSeason[i] /= 4;
+                }
+
+                fvChart.update();
+            });
+        }
+        updateFVChart();
+
+        weekCheck.addEventListener('change', (event) => {
+            fvChart.setDatasetVisibility(0, weekCheck.checked);
+            fvChart.update();
+        });
+
+        monthCheck.addEventListener('change', (event) => {
+            fvChart.setDatasetVisibility(1, weekCheck.checked);
+            fvChart.update();
+        });
+
+
+        seasonCheck.addEventListener('change', (event) => {
+            fvChart.setDatasetVisibility(2, weekCheck.checked);
+            fvChart.update();
         });
     }
 
