@@ -42,7 +42,10 @@ app.post('/database', (req, res) =>{
 
     try {
         if (typeof query == 'string') {
+            query = query.replaceAll("TO_CHAR", "~");
             query = query.replaceAll('_', ' ');
+            query = query.replaceAll("~", "TO_CHAR");
+            //console.log(query);
             database.accessDatabase(query).then(function (dataset) {
                 res.json(dataset);
             });
