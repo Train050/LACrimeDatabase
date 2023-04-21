@@ -8,7 +8,7 @@ const FRONTEND = __dirname + '/FrontEnd/';
 
 //App Settings
 app.set('case sensitive routing', false);
-
+app.use(express.json());
 
 app.get(['/', '/index'], (req, res) => {
     res.sendFile(FRONTEND + 'index.html');
@@ -37,8 +37,9 @@ app.get('/guncrimes', (req, res) =>{
 app.get('/theftbyseason', (req, res) =>{
     res.sendFile(FRONTEND + 'TheftBySeason.html')
 });
-app.get('/database/:quest', (req, res) =>{
-    let query = req.params.quest.toString();
+app.post('/database', (req, res) =>{
+    let query = req.body.rq;
+
     try {
         if (typeof query == 'string') {
             query = query.replaceAll('_', ' ');
