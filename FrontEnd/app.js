@@ -14,7 +14,13 @@ Chart.defaults.plugins.title.font.size = 24;
 
 
 async function getJSON(query){
-    const res = await fetch(baseURL + '/database/' + query);
+    const res = await fetch(baseURL + '/database/', {
+        method: "POST",
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({rq: query})
+    });
     return await res.json();
 }
 
@@ -216,6 +222,8 @@ document.addEventListener("DOMContentLoaded", (event) =>{
     FV = document.getElementById("FVChart");
 
     if(FV){
+
+
         const labels = ['January','February','March','April','May','June','July'];
         const data = {
             labels: labels,
