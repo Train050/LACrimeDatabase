@@ -5,6 +5,7 @@ const baseURL = window.location.origin;
 //Labels to use
 const monthsOfTheYear = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const colorScheme = ['rgb(50,120,205)', 'rgb(255,225,25)', 'rgb(35,205,75)', 'rgb(255,95,95)', 'rgb(255,155,75)'];
+const colorSchemeDark = ['rgb(10,80,165)', 'rgb(215,185,0)', 'rgb(0,165,35)', 'rgb(215,55,55)', 'rgb(215,115,35)'];
 
 
 //Set Chart.js Default configs
@@ -334,17 +335,29 @@ document.addEventListener("DOMContentLoaded", (event) =>{
     
 
         const changeYear = document.getElementById('TheftBySeason_Input');
-        let tbsData;
+        let tbsChangeData = [];
+        let tbsTotalData = [];
+
 
         const labels = ['Spring','Summer','Fall','Winter'];
         const data = {
             labels: labels,
             datasets: [{
-                label: 'Thefts by Season',
-                data: tbsData,
+                label: 'Relative Change',
+                yAxisID: 'y',
+                data: tbsChangeData,
                 backgroundColor: colorScheme,
                 borderColor: colorScheme,
                 borderWidth: 1
+
+            }, {
+                label: 'Total Petty Theft',
+                yAxisID: 'y1',
+                data: tbsTotalData,
+                backgroundColor: colorSchemeDark,
+                borderColor: colorSchemeDark,
+                borderWidth: 1
+
             }]
         };
         
@@ -367,12 +380,32 @@ document.addEventListener("DOMContentLoaded", (event) =>{
                 },
                 scales: {
                     y: {
-                        beginAtZero: true,
+                        beginAtZero: false,
                         title: {
                             display: true,
                             text: 'Percent'
-                        }
+                        },
+                        ticks: {
+                            stepSize: 5
+
+                        },
+                        max: 35,
+                        min: -35
+                    },
+                    y1: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Total'
+                        },
+                        position: 'right',
+                        ticks: {
+                            stepSize: 5000
+                        },
+                        max: 35000,
+                        min: -35000
                     }
+
                 }
             },
         };
@@ -380,18 +413,19 @@ document.addEventListener("DOMContentLoaded", (event) =>{
         let tbsChart = new Chart(TBS, config);
 
         async function updateTBSChart() {
-            getJSON("SELECT_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)_AS_\"Quarter\",_COUNT(*)_AS_\"Total_Petty_Theft\",_(COUNT(*)_-_LAG(COUNT(*),_1)_OVER_(ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)))_/_NULLIF(LAG(COUNT(*),_1)_OVER_(ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)),_0)_*_100_AS_\"Percent_Change\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_CrimeDescription_=_\'SHOPLIFTING_-_PETTY_THEFT_($950_&_UNDER)\'_OR_CrimeDescription_=_\'PETTY_THEFT_-_AUTO_REPAIR\'_OR_CrimeDescription_=_\'THEFT_FROM_MOTOR_VEHICLE_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'THEFT_PLAIN_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'THEFT,_COIN_MACHINE_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'TILL_TAP_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'EMBEZZLEMENT,_PETTY_THEFT_($950_&_UNDER)\'_OR_CrimeDescription_=_\'DISHONEST_EMPLOYEE_-_PETTY_THEFT\'_OR_CrimeDescription_=_\'BUNCO,_PETTY_THEFT\'_AND_EXTRACT(YEAR_FROM_DateReported)_=_2020_GROUP_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)_ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)").then(function (jsonData) {
-                let sliderVal = changeYear.value;
+            let sliderVal = changeYear.value;
+            getJSON(`SELECT_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)_AS_\"Quarter\",_COUNT(*)_AS_\"Total_Petty_Theft\",_(COUNT(*)_-_LAG(COUNT(*),_1)_OVER_(ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)))_/_NULLIF(LAG(COUNT(*),_1)_OVER_(ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)),_0)_*_100_AS_\"Percent_Change\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_CrimeDescription_=_\'SHOPLIFTING_-_PETTY_THEFT_($950_&_UNDER)\'_OR_CrimeDescription_=_\'PETTY_THEFT_-_AUTO_REPAIR\'_OR_CrimeDescription_=_\'THEFT_FROM_MOTOR_VEHICLE_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'THEFT_PLAIN_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'THEFT,_COIN_MACHINE_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'TILL_TAP_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'EMBEZZLEMENT,_PETTY_THEFT_($950_&_UNDER)\'_OR_CrimeDescription_=_\'DISHONEST_EMPLOYEE_-_PETTY_THEFT\'_OR_CrimeDescription_=_\'BUNCO,_PETTY_THEFT\'_AND_EXTRACT(YEAR_FROM_DateReported)_=_${sliderVal}_GROUP_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)_ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)`).then(function (jsonData) {
+                tbsChangeData.length = 0;
+                tbsTotalData.length = 0;
                 for (let i = 0; i < jsonData.results.length; i++) {
-                    let year = parseInt(jsonData.results[i].Month.slice(0, 4));
-                    let mon = parseInt(jsonData.results[i].Month.slice(5));
-
-                    if (year == sliderVal) {
-                        numGC[mon - 1] = jsonData.results[i][year];
-                    }
+                    let quarter = parseInt(jsonData.results[i].Quarter.slice(1));
+                    tbsChangeData[quarter - 1] = jsonData.results[i]["Percent Change"];
+                    tbsTotalData[quarter - 1] = jsonData.results[i]["Total Petty Theft"];
                 }
+                tbsChart.options.plugins.title.text = `Relative Change in Petty Theft in ${changeYear.value}`;
+                document.getElementById("TBSTitle").innerHTML = "<u>Theft by Season <br> in " + changeYear.value;
 
-                gcChart.update();
+                tbsChart.update();
             });
         }
         updateTBSChart();
