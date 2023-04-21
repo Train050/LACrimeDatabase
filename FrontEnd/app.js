@@ -178,19 +178,30 @@ document.addEventListener("DOMContentLoaded", (event) =>{
     CBL = document.getElementById("CBLChart");
 
     if(CBL){
-        const labels = ['Morning', 'Afternoon', 'Evening', 'Night'];
+
+        let dayTime = 'Morning';
+        const windowQuery = new URLSearchParams(window.location.search);
+
+        if (windowQuery.has('CrimeByLocation_Input')){
+            dayTime = windowQuery.get('CrimeByLocation_Input').replace('Station', '');
+
+            //Making sure the input matches the value
+            document.getElementById('CrimeByLocation_Input').value = windowQuery.get('CrimeByLocation_Input');
+        }
+
+        const timeRanges = ['Morning', 'Afternoon', 'Evening', 'Night'];
         const data = {
-            labels: labels,
+            labels: dayTime,
             datasets: [{
                 label: 'My First Dataset',
                 data: [65, 59, 80, 81, 56, 55, 40],
-                backgroundColor: [colorScheme],
-                borderColor: [colorScheme],
+                backgroundColor: [colorScheme[0]],
+                borderColor: [colorScheme[0]],
                 borderWidth: 1
             }]
         };
         const config = {
-            type: 'line',
+            type: 'bar',
             data: data,
             options: {
                 plugins: {
