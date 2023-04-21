@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", (event) =>{
                 borderColor: colorScheme[2]
 
             }, {
-                label: 'Latino',
+                label: 'Latine',
                 data: lData,
                 backgroundColor: colorScheme[3],
                 borderColor: colorScheme[3]
