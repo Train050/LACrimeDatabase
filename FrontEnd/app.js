@@ -112,10 +112,8 @@ document.addEventListener("DOMContentLoaded", (event) =>{
                         display: true,
                         font: {
                             size: 24,
-
                         },
                         text: `Arrests by Police Station ${policeStation}`
-
                     }
                 }
 
@@ -324,19 +322,31 @@ document.addEventListener("DOMContentLoaded", (event) =>{
 
     TBS = document.getElementById("TBSChart");
     
-    
     if(TBS){
+    
+        let theftYear = '2020';
+        const changeYear = document.getElementById('TheftBySeason_Input');
+
+        changeYear.addEventListener('change', (event) => {
+            theftYear = event.target.value;
+        });
+
+        let springData = [];
+        let summerData = [];
+        let fallData = [];
+        let winterData = [];
+
         const labels = ['Spring','Summer','Fall','Winter'];
         const data = {
             labels: labels,
             datasets: [{
                 label: 'Thefts by Season',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                data: [65, 59, 80, 81],
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 205, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)'
+                    'rgba(255, 99, 132)',
+                    'rgba(255, 159, 64)',
+                    'rgba(255, 205, 86)',
+                    'rgba(75, 192, 192)'
                 ],
                 borderColor: [
                     'rgb(255, 99, 132)',
@@ -347,13 +357,31 @@ document.addEventListener("DOMContentLoaded", (event) =>{
                 borderWidth: 1
             }]
         };
+        
         const config = {
             type: 'bar',
             data: data,
             options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: `Relative Change in Petty Theft in ${theftYear}`,
+                        font: {
+                            size: 24,
+                        },
+                        align: 'left'
+                    },
+                },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Percent'
+                        }
                     }
                 }
             },
