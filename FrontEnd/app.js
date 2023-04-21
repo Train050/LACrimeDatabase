@@ -226,31 +226,56 @@ document.addEventListener("DOMContentLoaded", (event) =>{
 
     FV = document.getElementById("FVChart");
 
+    let fvDataWeek = [10, 30, 20, 10, 5];
+    let fvDataMonth = [20, 40, 30, 20, 10];
+    let fvDataSeason = [30, 50, 40, 30, 20];
+
+    const weekCheck = document.getElementById("PerWeek");
+    const monthCheck = document.getElementById("PerMonth");
+    const seasonCheck = document.getElementById("PerSeason");
+
+    weekCheck.addEventListener('change', (event) => {
+        if (event.currentTarget.checked) {
+
+        }
+    });
+
+    monthCheck.addEventListener('change', (event) => {
+        if (event.currentTarget.checked) {
+
+        }
+    });
+
+
+    seasonCheck.addEventListener('change', (event) => {
+        if (event.currentTarget.checked) {
+
+        }
+    });
+
     if(FV){
-        const labels = ['January','February','March','April','May','June','July'];
+        const labels = ['Gen Z (0-26)', 'Millennial (27-42)', 'Gen X (43-58)', 'Boomers II (59-68)', 'Boomers I (69+)'];
         const data = {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 205, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(201, 203, 207, 0.2)'
-                ],
-                borderColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(54, 162, 235)',
-                    'rgb(153, 102, 255)',
-                    'rgb(201, 203, 207)'
-                ],
+                label: 'Week',
+                data: [fvDataWeek[0], fvDataWeek[1], fvDataWeek[2], fvDataWeek[3], fvDataWeek[4]],
+                backgroundColor: [colorScheme[0]],
+                borderColor: [colorScheme[0]],
+                borderWidth: 1
+            },
+            {
+                label: 'Month',
+                data: [fvDataMonth[0], fvDataMonth[1], fvDataMonth[2], fvDataMonth[3], fvDataMonth[4]],
+                backgroundColor: [colorScheme[3]],
+                borderColor: [colorScheme[3]],
+                borderWidth: 1
+            },
+            {
+                label: 'Season',
+                data: [fvDataMonth[0], fvDataMonth[1], fvDataMonth[2], fvDataMonth[3], fvDataMonth[4]],
+                backgroundColor: [colorScheme[1]],
+                borderColor: [colorScheme[1]],
                 borderWidth: 1
             }]
         };
@@ -258,10 +283,34 @@ document.addEventListener("DOMContentLoaded", (event) =>{
             type: 'bar',
             data: data,
             options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                    },
+                    title: {
+                        display: true,
+                        text: `Female Victims Per Time Period`,
+                        font: {
+                            size: 24,
+                        }
+                    },
+                },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Victim Per Time'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Age'
+                        }
                     }
+
                 }
             },
         };
@@ -323,11 +372,7 @@ document.addEventListener("DOMContentLoaded", (event) =>{
         sliderGC.addEventListener("change", (event) =>{
             updateGCChart();
         })
-
-
     }
-
-
 
     TBS = document.getElementById("TBSChart");
     
