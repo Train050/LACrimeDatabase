@@ -463,11 +463,25 @@ document.addEventListener("DOMContentLoaded", (event) =>{
             data: data,
             options: {
                 scales: {
+
                     y: {
                         beginAtZero: true
                     }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Number of Gun Crimes',
+                        font: {
+                            size: 24,
+                        }
+                    }
                 }
             },
+
         };
         let gcChart = new Chart(GC, config);
 
