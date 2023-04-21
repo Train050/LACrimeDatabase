@@ -166,7 +166,6 @@ document.addEventListener("DOMContentLoaded", (event) =>{
                     default:
                         //TODO: Add Pacific Islander
 
-
                 }
             }
             abrChart.update();
@@ -179,30 +178,27 @@ document.addEventListener("DOMContentLoaded", (event) =>{
 
     if(CBL){
 
-        let cblData = [];
-
-        for (let i = 0; i < 10; i++){
-            cblData[i] = 0;
-        }
-
         let dayTime = 'Morning';
         const windowQuery = new URLSearchParams(window.location.search);
 
         if (windowQuery.has('CrimeByLocation_Input')){
-            dayTime = windowQuery.get('CrimeByLocation_Input').replace('Station', '');
-
+            dayTime = windowQuery.get('CrimeByLocation_Input');
             //Making sure the input matches the value
             document.getElementById('CrimeByLocation_Input').value = windowQuery.get('CrimeByLocation_Input');
+
         }
 
-        const timeRanges = ['Morning', 'Afternoon', 'Evening', 'Night'];
+        let top10Locations = [];
+        let cblData = [];
+
+        //const timeRanges = ['Morning', 'Afternoon', 'Evening', 'Night'];
         const data = {
-            labels: dayTime,
+            labels: top10Locations,
             datasets: [{
-                label: 'My First Dataset',
-                data: [],
-                backgroundColor: [colorScheme[0]],
-                borderColor: [colorScheme[0]],
+                label: 'Highest 10 Crimes by Location',
+                data: cblData,
+                backgroundColor: colorScheme,
+                borderColor: colorScheme,
                 borderWidth: 1
             }]
         };
@@ -212,12 +208,12 @@ document.addEventListener("DOMContentLoaded", (event) =>{
             options: {
                 plugins: {
                     legend: {
-                        display: true,
+                        display: false,
                         position: 'bottom',
                     },
                     title: {
                         display: true,
-                        text: `Crime By Location`,
+                        text: `Top 10 Locations by Crime Number`,
                         font: {
                             size: 24,
                         }
@@ -228,13 +224,14 @@ document.addEventListener("DOMContentLoaded", (event) =>{
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Number of Crimes'
+                            text: 'Number of Crimes',
+
                         }
                     },
                     x: {
                         title: {
-                            display: true,
-                            text: 'Time of Day'
+                            display: false,
+                            text: 'Time'
                         }
                     }
 
@@ -243,29 +240,47 @@ document.addEventListener("DOMContentLoaded", (event) =>{
         };
         let cblChart = new Chart(CBL, config);
 
-        getJSON("SELECT_PremisDescription_as_\"Premis_Description\",_(CASE_WHEN_TimeOcured_BETWEEN_500_AND_1159_THEN_\'Morning\'_WHEN_TimeOcured_BETWEEN_1200_AND_1659_THEN_\'Afternoon\'_WHEN_TimeOcured_BETWEEN_1700_AND_2059_THEN_\'Evening\'_ELSE_\'Night\'_END)_AS_\"Time_Of_Day\",_COUNT(PremisDescription)_AS_\"Number_of_Crimes\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_PremisDescription_!=_\'0\'_AND_PremisDescription_!=_\'_\'_GROUP_BY_PremisDescription,_(CASE_WHEN_TimeOcured_BETWEEN_500_AND_1159_THEN_\'Morning\'_WHEN_TimeOcured_BETWEEN_1200_AND_1659_THEN_\'Afternoon\'_WHEN_TimeOcured_BETWEEN_1700_AND_2059_THEN_\'Evening\'_ELSE_\'Night\'_END)_ORDER_BY_\"Number_of_Crimes\"_DESC_PremisDescription_ASC,_(CASE_WHEN_TimeOcured_BETWEEN_500_AND_1159_THEN_\'Morning\'_WHEN_TimeOcured_BETWEEN_1200_AND_1659_THEN_\'Afternoon\'_WHEN_TimeOcured_BETWEEN_1700_AND_2059_THEN_\'Evening\'_ELSE_\'Night\'_END)_ASC").then(function (jsonData) {
-            for (let i = 0; i < jsonData.results.length; i++) {
-                if (jsonData.results[i]["Time_Of_Day"] == dayTime){
-                    cblData.push(jsonData.results[i]["Number_of_Crimes"]);
-                    }   
+        getJSON("SELECT_PremisDescription_as_\"Premis_Description\",_(CASE_WHEN_TimeOcured_BETWEEN_500_AND_1159_THEN_\'Morning\'_WHEN_TimeOcured_BETWEEN_1200_AND_1659_THEN_\'Afternoon\'_WHEN_TimeOcured_BETWEEN_1700_AND_2059_THEN_\'Evening\'_ELSE_\'Night\'_END)_AS_\"Time_Of_Day\",_COUNT(PremisDescription)_AS_\"Number_of_Crimes\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_PremisDescription_!=_\'0\'_AND_PremisDescription_!=_\'_\'_GROUP_BY_PremisDescription,_(CASE_WHEN_TimeOcured_BETWEEN_500_AND_1159_THEN_\'Morning\'_WHEN_TimeOcured_BETWEEN_1200_AND_1659_THEN_\'Afternoon\'_WHEN_TimeOcured_BETWEEN_1700_AND_2059_THEN_\'Evening\'_ELSE_\'Night\'_END)_ORDER_BY_\"Number_of_Crimes\"_DESC,_PremisDescription_ASC,_(CASE_WHEN_TimeOcured_BETWEEN_500_AND_1159_THEN_\'Morning\'_WHEN_TimeOcured_BETWEEN_1200_AND_1659_THEN_\'Afternoon\'_WHEN_TimeOcured_BETWEEN_1700_AND_2059_THEN_\'Evening\'_ELSE_\'Night\'_END)_ASC").then(function (jsonData) {
+            for (let i = 0; i < jsonData.results.length; i++){
+                if (dayTime == jsonData.results[i]["Time Of Day"]) {
+                    if (cblData.length < 10){
+                        cblData.push(jsonData.results[i]["Number of Crimes"]);
+                        top10Locations.push(jsonData.results[i]["Premis Description"])
+                    }
                 }
-            });
+            }
+            cblChart.update();
+        });
     }
 
     FV = document.getElementById("FVChart");
 
     if(FV){
+        //Add Values to Select
+        let dropdownFV = document.getElementById("FemaleVictims_FormDrop");
+        let temp = document.createElement('option');
+        temp.value = "Total Average";
+        temp.innerHTML = "Total Average";
+        dropdownFV.add(temp)
+
+        for (let i = 1; i < 54; i++){
+            let temp = document.createElement('option');
+            temp.value = "Week "+ i;
+            temp.innerHTML = "Week " + i;
+            dropdownFV.add(temp)
+        }
+
+        //Chart
         let fvDataWeek = [];
         let fvDataMonth = [];
         let fvDataSeason = [];
-
         for (let i = 0; i < 5; i++){
             fvDataWeek[i] = 0;
             fvDataMonth[i] = 0;
             fvDataSeason[i] = 0;
         }
 
-        let weekChoice = '1';
+        let weekChoice = 'Total Average';
         const windowQuery = new URLSearchParams(window.location.search);
 
         if (windowQuery.has('FemaleVictims_FormDrop')){
@@ -340,38 +355,69 @@ document.addEventListener("DOMContentLoaded", (event) =>{
                 }
             },
         };
+
+        function genToInt(genName){
+            switch (genName) {
+                case "Gen Z":
+                    return 0;
+                case "Millennial":
+                    return 1;
+                case "Gen X":
+                    return 2;
+                case "Boomers II":
+                    return 3;
+                case "Boomers I":
+                    return 4;
+            }
+        }
+
         let fvChart = new Chart(FV, config);
         async function updateFVChart() {
             getJSON("SELECT_TO_CHAR(DateOcured,_\'WW\')_AS_\"Week\",_SUM(CASE_WHEN_VictimSex_=_\'F\'_THEN_1_ELSE_0_END)_AS_\"Total_Females\",_(CASE_WHEN_VictimAge_BETWEEN_0_AND_26_THEN_\'Gen_Z\'_WHEN_VictimAge_BETWEEN_27_AND_42_THEN_\'Millennial\'_WHEN_VictimAge_BETWEEN_43_AND_58_THEN_\'Gen_X\'_WHEN_VictimAge_BETWEEN_59_AND_68_THEN_\'Boomers_II\'_ELSE_\'Boomers_I\'_END)_As_\"Generation\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_DateOcured_BETWEEN_\'01-JAN-2020\'_AND_\'31-DEC-2020\'_AND_VictimAge_BETWEEN_0_AND_100_GROUP_BY_TO_CHAR(DateOcured,_\'WW\'),_(CASE_WHEN_VictimAge_BETWEEN_0_AND_26_THEN_\'Gen_Z\'_WHEN_VictimAge_BETWEEN_27_AND_42_THEN_\'Millennial\'_WHEN_VictimAge_BETWEEN_43_AND_58_THEN_\'Gen_X\'_WHEN_VictimAge_BETWEEN_59_AND_68_THEN_\'Boomers_II\'_ELSE_\'Boomers_I\'_END)_ORDER_BY_TO_CHAR(DateOcured,_\'WW\')_ASC,_SUM((CASE_WHEN_VictimSex_=_\'F\'_THEN_1_ELSE_0_END))_DESC").then(function (jsonData) {
+                //Default Functionality
+                if (weekChoice == 'Total Average') {
+                    for (let i = 0; i < jsonData.results.length; i++) {
+                        let xVal = genToInt(jsonData.results[i].Generation);
 
-                for (let i = 0; i < jsonData.results.length; i++) {
-                    let xVal;
-                    switch (jsonData.results[i].Generation) {
-                        case "Gen Z":
-                            xVal = 0;
-                            break;
-                        case "Millennial":
-                            xVal = 1;
-                            break;
-                        case "Gen X":
-                            xVal = 2;
-                            break;
-                        case "Boomers II":
-                            xVal = 3;
-                            break;
-                        case "Boomers I":
-                            xVal = 4;
-                            break;
+                        fvDataWeek[xVal] += jsonData.results[i]["Total Females"];
+                        fvDataMonth[xVal] += jsonData.results[i]["Total Females"];
+                        fvDataSeason[xVal] += jsonData.results[i]["Total Females"];
+
                     }
-
-                    fvDataWeek[xVal] += jsonData.results[i]["Total Females"];
-                    fvDataMonth[xVal] += jsonData.results[i]["Total Females"];
-                    fvDataSeason[xVal] += jsonData.results[i]["Total Females"];
+                    for (let i = 0; i < 5; i++) {
+                        fvDataWeek[i] /= 53;
+                        fvDataMonth[i] /= 12;
+                        fvDataSeason[i] /= 4;
+                    }
                 }
-                for (let i = 0; i < 5; i++){
-                    fvDataWeek[i] /= 53;
-                    fvDataMonth[i] /= 12;
-                    fvDataSeason[i] /= 4;
+                //Week by week
+                else {
+
+                    let weekInt = parseInt(weekChoice);
+
+
+                    let currMonth = Math.floor((weekInt - 1) / 4);
+                    let currSeason = Math.floor((weekInt - 1) / 13);
+
+                    for (let i = 0; i < jsonData.results.length; i++) {
+                        let xVal = genToInt(jsonData.results[i].Generation);
+
+                        if (jsonData.results[i].Week == weekInt) {
+                            fvDataWeek[xVal] += jsonData.results[i]["Total Females"];
+                        }
+
+                        if (Math.floor((jsonData.results[i].Week - 1)/4) == currMonth) {
+                            fvDataMonth[xVal] += jsonData.results[i]["Total Females"];
+                        }
+                        if (Math.floor((jsonData.results[i].Week - 1) /13) == currSeason) {
+                            fvDataSeason[xVal] += jsonData.results[i]["Total Females"];
+                        }
+
+                    }
+                    for (let i = 0; i < 5; i++) {
+                        fvDataMonth[i] /= 4;
+                        fvDataSeason[i] /= 13;
+                    }
                 }
 
                 fvChart.update();
@@ -385,13 +431,13 @@ document.addEventListener("DOMContentLoaded", (event) =>{
         });
 
         monthCheck.addEventListener('input', (event) => {
-            fvChart.setDatasetVisibility(1, weekCheck.checked);
+            fvChart.setDatasetVisibility(1, monthCheck.checked);
             fvChart.update();
         });
 
 
         seasonCheck.addEventListener('input', (event) => {
-            fvChart.setDatasetVisibility(2, weekCheck.checked);
+            fvChart.setDatasetVisibility(2, seasonCheck.checked);
             fvChart.update();
         });
     }
@@ -539,8 +585,8 @@ document.addEventListener("DOMContentLoaded", (event) =>{
                 tbsTotalData.length = 0;
                 for (let i = 0; i < jsonData.results.length; i++) {
                     let quarter = parseInt(jsonData.results[i].Quarter.slice(1));
-                    tbsChangeData[quarter - 1] = jsonData.results[i]["Percent Change"];
-                    tbsTotalData[quarter - 1] = jsonData.results[i]["Total Petty Theft"];
+                    tbsChangeData[quarter - 1] = {x: quarter - 1 ,y: jsonData.results[i]["Percent Change"]};
+                    tbsTotalData[quarter - 1] = {x: quarter - 1, y: jsonData.results[i]["Total Petty Theft"]};
                 }
                 tbsChart.options.plugins.title.text = `Relative Change in Petty Theft in ${changeYear.value}`;
                 document.getElementById("TBSTitle").innerHTML = "<u>Theft by Season <br> in " + changeYear.value;
