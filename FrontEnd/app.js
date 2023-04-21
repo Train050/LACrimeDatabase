@@ -240,10 +240,33 @@ document.addEventListener("DOMContentLoaded", (event) =>{
             type: 'bar',
             data: data,
             options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: `Female Victims Per Time Period`,
+                        font: {
+                            size: 24,
+                        }
+                    },
+                },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Victim Per Time'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Age'
+                        }
                     }
+
                 }
             },
         };
