@@ -1,23 +1,10 @@
---grant all privileges to STRUNKS, NPEREZ3, CAMERON.ARRACHE;
---grant all privileges on UserInfo, CrimeData, PoliceCode, VictimData, PopulationData, PoliceStation, PremiseData, WeaponTable, CrimeDataToPolice, CrimeDataToVictim to students;
-
-create table UserInfo
-(
-    UserID integer,
-    Name varchar (25) not null,
-    Password varchar (25) not null,
-    Email varchar (50) not null,
-    DateOfBirth date,
-    primary key (UserID)
-    INITIALLY DEFERRED DEFERRABLE
-);
 
 create table CrimeData
 (
     DrNo integer primary key,
-    DateReported varchar (50) not null,
-    DateOccured varchar (50) not null,
-    TimeOccured integer,
+    DateReported DATE,
+    DateOcured DATE,
+    TimeOcured integer,
     Area integer,
     AreaName varchar (50) not null,
     ReportedDistrictNumber integer,
@@ -41,15 +28,15 @@ create table CrimeData
     CrimeLocation varchar (50) not null,
     CrossStreet varchar (50) not null,
     Latitude numeric(7,4),
-    Longitude numeric(7,4),
-    
+    Longitude numeric(7,4)
+        
+/*
     constraint PC_Info unique (DrNo, Area, AreaName),
     constraint VD_Info unique (DrNo, VictimAge, VictimSex, VictimDescent),
     constraint PD_Info unique (DrNo, PremisCD, PremisDescription, CrimeLocation, CrossStreet),
     constraint WT_Info unique (DrNo, WeaponUsed, WeaponDescription),
     constraint CDTP_Info unique (DrNo, Area, CrimeCode, CrimeCodeTwo, CrimeCodeThree, CrimeCodeFour),
     constraint CDTV_Info unique (DrNo, VictimAge, VictimSex, VictimDescent, CrimeCode, CrimeCodeTwo, CrimeCodeThree, CrimeCodeFour)
-    /*
     TimeOfDay varchar (25) not null,
     CrimeDate date not null,
     Crime_Code integer,
@@ -66,6 +53,7 @@ create table CrimeData
     */
 );
 
+/*
 create table PoliceCode
 (
     PC_DrNo integer primary key,
@@ -82,7 +70,7 @@ create table VictimData
     VD_Ethnicity varchar (1) not null,
     constraint VD_VictimInfo foreign key (VD_DrNo, VD_Age, Vd_Sex, VD_Ethnicity) references CrimeData (DrNo, VictimAge, VictimSex, VictimDescent)
 );
-
+*/
 /* There is no population information, idk where this table came from
 create table PopulationData
 (
@@ -102,7 +90,7 @@ create table PoliceStation
     constraint PS_PoliceStationInfo foreign key (VD_DrNo, PS_AreaCode, PS_AreaName) references CrimeData (DrNo, AreaCode, AreaName)
 );
 */
-
+/*
 create table PremisData
 (
     PD_DrNo integer primary key,
@@ -147,3 +135,29 @@ create table CrimeDataToVictim
     constraint CDTV_CrimeDataToVictim foreign key (CDTV_DrNo, CDTV_VictimAge, CDTV_VictimSex, CDTV_VictimDescent, CDTV_CrimeCode, CDTV_CrimeCodeTwo, CDTV_CrimeCodeThree, CDTV_CrimeCodeFour)
     references CrimeData (DrNo, VictimAge, VictimSex, VictimDescent, CrimeCode, CrimeCodeTwo, CrimeCodeThree, CrimeCodeFour)
 );
+*/
+create table UserInfo
+(
+    UserID integer,
+    Name varchar (25) not null,
+    Password varchar (25) not null,
+    Email varchar (50) not null,
+    DateOfBirth DATE,
+    primary key (UserID)
+);
+
+
+--grant all privileges to STRUNKS, NPEREZ3, CAMERON.ARRACHE;
+GRANT SELECT,INSERT,UPDATE,DELETE ON UserInfo TO STRUNKS, NPEREZ3, "CAMERON.ARRECHE";
+GRANT SELECT,INSERT,UPDATE,DELETE ON CrimeData TO STRUNKS, NPEREZ3, "CAMERON.ARRECHE";
+/*
+GRANT SELECT,INSERT,UPDATE,DELETE ON PoliceCode TO STRUNKS, NPEREZ3, "CAMERON.ARRECHE";
+GRANT SELECT,INSERT,UPDATE,DELETE ON VictimData TO STRUNKS, NPEREZ3, "CAMERON.ARRECHE";
+--GRANT SELECT,INSERT,UPDATE,DELETE ON PopulationData TO STRUNKS, NPEREZ3, "CAMERON.ARRECHE";
+--GRANT SELECT,INSERT,UPDATE,DELETE ON PoliceStation TO STRUNKS, NPEREZ3, "CAMERON.ARRECHE";
+GRANT SELECT,INSERT,UPDATE,DELETE ON PremiseData TO STRUNKS, NPEREZ3, "CAMERON.ARRECHE";
+GRANT SELECT,INSERT,UPDATE,DELETE ON WeaponTable TO STRUNKS, NPEREZ3, "CAMERON.ARRECHE";
+GRANT SELECT,INSERT,UPDATE,DELETE ON CrimeDataToPolice TO STRUNKS, NPEREZ3, "CAMERON.ARRECHE";
+GRANT SELECT,INSERT,UPDATE,DELETE ON CrimeDataToVictim TO STRUNKS, NPEREZ3, "CAMERON.ARRECHE";
+*/
+--grant all privileges on UserInfo, CrimeData, PoliceCode, VictimData, PopulationData, PoliceStation, PremiseData, WeaponTable, CrimeDataToPolice, CrimeDataToVictim to students;
