@@ -246,6 +246,21 @@ document.addEventListener("DOMContentLoaded", (event) =>{
     FV = document.getElementById("FVChart");
 
     if(FV){
+        //Add Values to Select
+        let dropdownFV = document.getElementById("FemaleVictims_FormDrop");
+        let temp = document.createElement('option');
+        temp.value = "Total Average";
+        temp.innerHTML = "Total Average";
+        dropdownFV.add(temp)
+
+        for (let i = 1; i < 53; i++){
+            let temp = document.createElement('option');
+            temp.value = "Week "+ i;
+            temp.innerHTML = "Week " + i;
+            dropdownFV.add(temp)
+        }
+
+        //Chart
         let fvDataWeek = [];
         let fvDataMonth = [];
         let fvDataSeason = [];
@@ -320,6 +335,7 @@ document.addEventListener("DOMContentLoaded", (event) =>{
                 }
             },
         };
+
         let fvChart = new Chart(FV, config);
         async function updateFVChart() {
             getJSON("SELECT_TO_CHAR(DateOcured,_\'WW\')_AS_\"Week\",_SUM(CASE_WHEN_VictimSex_=_\'F\'_THEN_1_ELSE_0_END)_AS_\"Total_Females\",_(CASE_WHEN_VictimAge_BETWEEN_0_AND_26_THEN_\'Gen_Z\'_WHEN_VictimAge_BETWEEN_27_AND_42_THEN_\'Millennial\'_WHEN_VictimAge_BETWEEN_43_AND_58_THEN_\'Gen_X\'_WHEN_VictimAge_BETWEEN_59_AND_68_THEN_\'Boomers_II\'_ELSE_\'Boomers_I\'_END)_As_\"Generation\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_DateOcured_BETWEEN_\'01-JAN-2020\'_AND_\'31-DEC-2020\'_AND_VictimAge_BETWEEN_0_AND_100_GROUP_BY_TO_CHAR(DateOcured,_\'WW\'),_(CASE_WHEN_VictimAge_BETWEEN_0_AND_26_THEN_\'Gen_Z\'_WHEN_VictimAge_BETWEEN_27_AND_42_THEN_\'Millennial\'_WHEN_VictimAge_BETWEEN_43_AND_58_THEN_\'Gen_X\'_WHEN_VictimAge_BETWEEN_59_AND_68_THEN_\'Boomers_II\'_ELSE_\'Boomers_I\'_END)_ORDER_BY_TO_CHAR(DateOcured,_\'WW\')_ASC,_SUM((CASE_WHEN_VictimSex_=_\'F\'_THEN_1_ELSE_0_END))_DESC").then(function (jsonData) {
@@ -365,13 +381,13 @@ document.addEventListener("DOMContentLoaded", (event) =>{
         });
 
         monthCheck.addEventListener('input', (event) => {
-            fvChart.setDatasetVisibility(1, weekCheck.checked);
+            fvChart.setDatasetVisibility(1, monthCheck.checked);
             fvChart.update();
         });
 
 
         seasonCheck.addEventListener('input', (event) => {
-            fvChart.setDatasetVisibility(2, weekCheck.checked);
+            fvChart.setDatasetVisibility(2, seasonCheck.checked);
             fvChart.update();
         });
     }
@@ -519,8 +535,8 @@ document.addEventListener("DOMContentLoaded", (event) =>{
                 tbsTotalData.length = 0;
                 for (let i = 0; i < jsonData.results.length; i++) {
                     let quarter = parseInt(jsonData.results[i].Quarter.slice(1));
-                    tbsChangeData[quarter - 1] = jsonData.results[i]["Percent Change"];
-                    tbsTotalData[quarter - 1] = jsonData.results[i]["Total Petty Theft"];
+                    tbsChangeData[quarter - 1] = {x: quarter - 1 ,y: jsonData.results[i]["Percent Change"]};
+                    tbsTotalData[quarter - 1] = {x: quarter - 1, y: jsonData.results[i]["Total Petty Theft"]};
                 }
                 tbsChart.options.plugins.title.text = `Relative Change in Petty Theft in ${changeYear.value}`;
                 document.getElementById("TBSTitle").innerHTML = "<u>Theft by Season <br> in " + changeYear.value;
