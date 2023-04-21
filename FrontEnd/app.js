@@ -4,7 +4,8 @@ const baseURL = window.location.origin;
 
 //Labels to use
 const monthsOfTheYear = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const colorScheme = ['rgb(50,120,205)', 'rgb(255,225,25)', 'rgb(35,205,75)', 'rgb(255,95,95)'];
+const colorScheme = ['rgb(50,120,205)', 'rgb(255,225,25)', 'rgb(35,205,75)', 'rgb(255,95,95)', 'rgb(255,155,75)'];
+
 
 //Set Chart.js Default configs
 Chart.defaults.color = 'rgb(255,255,255)';
@@ -224,15 +225,56 @@ document.addEventListener("DOMContentLoaded", (event) =>{
 
     FV = document.getElementById("FVChart");
 
+    let fvDataWeek = [10, 30, 20, 10, 5];
+    let fvDataMonth = [20, 40, 30, 20, 10];
+    let fvDataSeason = [30, 50, 40, 30, 20];
+
+    const weekCheck = document.getElementById("PerWeek");
+    const monthCheck = document.getElementById("PerMonth");
+    const seasonCheck = document.getElementById("PerSeason");
+
+    weekCheck.addEventListener('change', (event) => {
+        if (event.currentTarget.checked) {
+
+        }
+    });
+
+    monthCheck.addEventListener('change', (event) => {
+        if (event.currentTarget.checked) {
+
+        }
+    });
+
+
+    seasonCheck.addEventListener('change', (event) => {
+        if (event.currentTarget.checked) {
+
+        }
+    });
+
     if(FV){
-        const labels = ['Gen Z (0-26)', 'Millennial (27-42)', 'Gen X (43-58)', 'Boomers II (59-68), Boomers I (69+)'];
+        const labels = ['Gen Z (0-26)', 'Millennial (27-42)', 'Gen X (43-58)', 'Boomers II (59-68)', 'Boomers I (69+)'];
         const data = {
             labels: labels,
             datasets: [{
-                data: [65, 59, 80, 81, 32],
-                backgroundColor: [colorScheme[0], colorScheme[1], colorScheme[2], colorScheme[3], colorScheme[4]],
-                borderColor: [
-                    colorScheme[0], colorScheme[1], colorScheme[2], colorScheme[3], colorScheme[4]],
+                label: 'Week',
+                data: [fvDataWeek[0], fvDataWeek[1], fvDataWeek[2], fvDataWeek[3], fvDataWeek[4]],
+                backgroundColor: [colorScheme[0]],
+                borderColor: [colorScheme[0]],
+                borderWidth: 1
+            },
+            {
+                label: 'Month',
+                data: [fvDataMonth[0], fvDataMonth[1], fvDataMonth[2], fvDataMonth[3], fvDataMonth[4]],
+                backgroundColor: [colorScheme[3]],
+                borderColor: [colorScheme[3]],
+                borderWidth: 1
+            },
+            {
+                label: 'Season',
+                data: [fvDataMonth[0], fvDataMonth[1], fvDataMonth[2], fvDataMonth[3], fvDataMonth[4]],
+                backgroundColor: [colorScheme[1]],
+                borderColor: [colorScheme[1]],
                 borderWidth: 1
             }]
         };
@@ -242,7 +284,8 @@ document.addEventListener("DOMContentLoaded", (event) =>{
             options: {
                 plugins: {
                     legend: {
-                        display: false
+                        display: true,
+                        position: 'bottom',
                     },
                     title: {
                         display: true,
@@ -334,36 +377,18 @@ document.addEventListener("DOMContentLoaded", (event) =>{
     
     if(TBS){
     
-        let theftYear = '2020';
+
         const changeYear = document.getElementById('TheftBySeason_Input');
-
-        changeYear.addEventListener('change', (event) => {
-            theftYear = changeYear.value;
-        });
-
-        let springData = [];
-        let summerData = [];
-        let fallData = [];
-        let winterData = [];
+        let tbsData;
 
         const labels = ['Spring','Summer','Fall','Winter'];
         const data = {
             labels: labels,
             datasets: [{
                 label: 'Thefts by Season',
-                data: [65, 59, 80, 81],
-                backgroundColor: [
-                    'rgba(255, 99, 132)',
-                    'rgba(255, 159, 64)',
-                    'rgba(255, 205, 86)',
-                    'rgba(75, 192, 192)'
-                ],
-                borderColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)'
-                ],
+                data: tbsData,
+                backgroundColor: colorScheme,
+                borderColor: colorScheme,
                 borderWidth: 1
             }]
         };
@@ -378,7 +403,7 @@ document.addEventListener("DOMContentLoaded", (event) =>{
                     },
                     title: {
                         display: true,
-                        text: `Relative Change in Petty Theft in ${theftYear}`,
+                        text: `Relative Change in Petty Theft in ${changeYear.value}`,
                         font: {
                             size: 24,
                         },
@@ -399,8 +424,25 @@ document.addEventListener("DOMContentLoaded", (event) =>{
 
         let tbsChart = new Chart(TBS, config);
 
-        getJSON("SELECT_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)_AS_\"Quarter\",_COUNT(*)_AS_\"Total_Petty_Theft\",_(COUNT(*)_-_LAG(COUNT(*),_1)_OVER_(ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)))_/_NULLIF(LAG(COUNT(*),_1)_OVER_(ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)),_0)_*_100_AS_\"Percent_Change\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_CrimeDescription_=_\'SHOPLIFTING_-_PETTY_THEFT_($950_&_UNDER)\'_OR_CrimeDescription_=_\'PETTY_THEFT_-_AUTO_REPAIR\'_OR_CrimeDescription_=_\'THEFT_FROM_MOTOR_VEHICLE_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'THEFT_PLAIN_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'THEFT,_COIN_MACHINE_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'TILL_TAP_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'EMBEZZLEMENT,_PETTY_THEFT_($950_&_UNDER)\'_OR_CrimeDescription_=_\'DISHONEST_EMPLOYEE_-_PETTY_THEFT\'_OR_CrimeDescription_=_\'BUNCO,_PETTY_THEFT\'_AND_EXTRACT(YEAR_FROM_DateReported)_=_2020_GROUP_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)_ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)").then(function (jsonData) {
-        
+        async function updateTBSChart() {
+            getJSON("SELECT_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)_AS_\"Quarter\",_COUNT(*)_AS_\"Total_Petty_Theft\",_(COUNT(*)_-_LAG(COUNT(*),_1)_OVER_(ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)))_/_NULLIF(LAG(COUNT(*),_1)_OVER_(ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)),_0)_*_100_AS_\"Percent_Change\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_CrimeDescription_=_\'SHOPLIFTING_-_PETTY_THEFT_($950_&_UNDER)\'_OR_CrimeDescription_=_\'PETTY_THEFT_-_AUTO_REPAIR\'_OR_CrimeDescription_=_\'THEFT_FROM_MOTOR_VEHICLE_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'THEFT_PLAIN_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'THEFT,_COIN_MACHINE_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'TILL_TAP_-_PETTY_($950_&_UNDER)\'_OR_CrimeDescription_=_\'EMBEZZLEMENT,_PETTY_THEFT_($950_&_UNDER)\'_OR_CrimeDescription_=_\'DISHONEST_EMPLOYEE_-_PETTY_THEFT\'_OR_CrimeDescription_=_\'BUNCO,_PETTY_THEFT\'_AND_EXTRACT(YEAR_FROM_DateReported)_=_2020_GROUP_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)_ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)").then(function (jsonData) {
+                let sliderVal = changeYear.value;
+                for (let i = 0; i < jsonData.results.length; i++) {
+                    let year = parseInt(jsonData.results[i].Month.slice(0, 4));
+                    let mon = parseInt(jsonData.results[i].Month.slice(5));
+
+                    if (year == sliderVal) {
+                        numGC[mon - 1] = jsonData.results[i][year];
+                    }
+                }
+
+                gcChart.update();
+            });
+        }
+        updateTBSChart();
+
+        changeYear.addEventListener('change', (event) => {
+            updateTBSChart();
         });
 
     }

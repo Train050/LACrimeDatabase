@@ -8,7 +8,7 @@ exports.accessDatabase = async function(query) {
 
     try {
 
-        const tmp = '{ "user": "******", "password": "******", "connectionString" : "oracle.cise.ufl.edu:1521/orcl" }';
+        const tmp = '{ "user": "KEEGAN.SEPIOL", "password": "AcPRpRiqALdU5vFky6IGPmfy", "connectionString" : "oracle.cise.ufl.edu:1521/orcl" }';
         cnt = await oracledb.getConnection(JSON.parse(tmp));
         result = await cnt.execute(query, [], {outFormat: oracledb.OUT_FORMAT_OBJECT});
     }
