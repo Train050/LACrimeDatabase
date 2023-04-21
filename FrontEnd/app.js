@@ -4,6 +4,7 @@ const baseURL = window.location.origin;
 
 //Labels to use
 const monthsOfTheYear = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const colorScheme = ['rgb(50,120,205)', 'rgb(255,225,25)', 'rgb(35,205,75)', 'rgb(255,95,95)'];
 
 //Set Chart.js Default configs
 Chart.defaults.color = 'rgb(255,255,255)';
@@ -67,25 +68,25 @@ document.addEventListener("DOMContentLoaded", (event) =>{
             datasets: [{
                 label: 'Black',
                 data: bData,
-                backgroundColor: 'rgb(50,120,205)',
-                borderColor: 'rgb(50,120,205)'
+                backgroundColor: colorScheme[0],
+                borderColor: colorScheme[0]
             }, {
                 label: 'White',
                 data:  wData,
-                backgroundColor: 'rgb(255,225,25)',
-                borderColor: 'rgb(255,225,25)'
+                backgroundColor: colorScheme[1],
+                borderColor: colorScheme[1]
 
             }, {
                 label: 'Asian',
                 data:  aData,
-                backgroundColor: 'rgb(35,205,75)',
-                borderColor: 'rgb(35,205,75)'
+                backgroundColor: colorScheme[2],
+                borderColor: colorScheme[2]
 
             }, {
                 label: 'Latino',
                 data: lData,
-                backgroundColor: 'rgb(255,95,95)',
-                borderColor: 'rgb(255,95,95)'
+                backgroundColor: colorScheme[3],
+                borderColor: colorScheme[3]
             }],
         };
         const config = {
@@ -272,30 +273,16 @@ document.addEventListener("DOMContentLoaded", (event) =>{
     GC = document.getElementById("GCChart");
 
     if(GC){
-        const labels = ['January','February','March','April','May','June','July'];
+        let numGC = [];
+        let sliderGC = document.getElementById("GunCrime_Input");
+
         const data = {
-            labels: labels,
+            labels: monthsOfTheYear,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 205, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(201, 203, 207, 0.2)'
-                ],
-                borderColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(54, 162, 235)',
-                    'rgb(153, 102, 255)',
-                    'rgb(201, 203, 207)'
-                ],
+                label: 'Number of Gun Crimes',
+                data: numGC,
+                backgroundColor: colorScheme,
+                borderColor: colorScheme,
                 borderWidth: 1
             }]
         };
@@ -313,12 +300,32 @@ document.addEventListener("DOMContentLoaded", (event) =>{
         let gcChart = new Chart(GC, config);
 
 
-        getJSON("SELECT_TO_CHAR(DateReported,_'YYYY-MM')_AS_\"Month\",_SUM(CASE_WHEN_((WeaponDescription_=_'HAND_GUN'_OR_WeaponDescription_=_'ANTIQUE_FIREARM'_OR_WeaponDescription_=_'ASSAULT_WEAPON/UZI/AK47/ETC'_OR_WeaponDescription_=_'AUTOMATIC_WEAPON/SUB-MACHINE_GUN'_OR_WeaponDescription_=_'M1-1_SEMIAUTOMATIC_ASSULT_RIFLE'_OR_WeaponDescription_=_'M-14_SEMIAUTOMATIC_ASSAULT_RIFLE'_OR_WeaponDescription_=_'MAC-10_SEMIAUTOMATIC_ASSAULT_WEAPON'_OR_WeaponDescription_=_'MAC-11_SEMIAUTOMATIC_ASSAULT_WEAPON'_OR_WeaponDescription_=_'OTHER_FIREARM'_OR_WeaponDescription_=_'RELIC_FIREARM'_OR_WeaponDescription_=_'REVOLVER'_OR_WeaponDescription_=_'RIFLE'_OR_WeaponDescription_=_'SEMI-AUTOMATIC_PISTOL'_OR_WeaponDescription_=_'SEMI-AUTOMATIC_RIFLE'_OR_WeaponDescription_=_'SHOTGUN'_OR_WeaponDescription_=_'STARTER_PISTOL/REVOLVER'_OR_WeaponDescription_=_'UNKNOWN_FIREARM'_OR_WeaponDescription_=_'UNK_TYPE_SEMIAUTOMATIC_ASSAULT_RIFLE'_OR_WeaponDescription_=_'UZI_SEMIAUTOMATIC_ASSAULT_RIFLE')_AND_(EXTRACT(YEAR_FROM_DateReported)_=_2020))_THEN_1_ELSE_0_END)_AS_\"2020\",_SUM(CASE_WHEN_((WeaponDescription_=_'HAND_GUN'_OR_WeaponDescription_=_'ANTIQUE_FIREARM'_OR_WeaponDescription_=_'ASSAULT_WEAPON/UZI/AK47/ETC'_OR_WeaponDescription_=_'AUTOMATIC_WEAPON/SUB-MACHINE_GUN'_OR_WeaponDescription_=_'M1-1_SEMIAUTOMATIC_ASSULT_RIFLE'_OR_WeaponDescription_=_'M-14_SEMIAUTOMATIC_ASSAULT_RIFLE'_OR_WeaponDescription_=_'MAC-10_SEMIAUTOMATIC_ASSAULT_WEAPON'_OR_WeaponDescription_=_'MAC-11_SEMIAUTOMATIC_ASSAULT_WEAPON'_OR_WeaponDescription_=_'OTHER_FIREARM'_OR_WeaponDescription_=_'RELIC_FIREARM'_OR_WeaponDescription_=_'REVOLVER'_OR_WeaponDescription_=_'RIFLE'_OR_WeaponDescription_=_'SEMI-AUTOMATIC_PISTOL'_OR_WeaponDescription_=_'SEMI-AUTOMATIC_RIFLE'_OR_WeaponDescription_=_'SHOTGUN'_OR_WeaponDescription_=_'STARTER_PISTOL/REVOLVER'_OR_WeaponDescription_=_'UNKNOWN_FIREARM'_OR_WeaponDescription_=_'UNK_TYPE_SEMIAUTOMATIC_ASSAULT_RIFLE'_OR_WeaponDescription_=_'UZI_SEMIAUTOMATIC_ASSAULT_RIFLE')_AND_(EXTRACT(YEAR_FROM_DateReported)_=_2021))_THEN_1_ELSE_0_END)_AS_\"2021\",_SUM(CASE_WHEN_((WeaponDescription_=_'HAND_GUN'_OR_WeaponDescription_=_'ANTIQUE_FIREARM'_OR_WeaponDescription_=_'ASSAULT_WEAPON/UZI/AK47/ETC'_OR_WeaponDescription_=_'AUTOMATIC_WEAPON/SUB-MACHINE_GUN'_OR_WeaponDescription_=_'M1-1_SEMIAUTOMATIC_ASSULT_RIFLE'_OR_WeaponDescription_=_'M-14_SEMIAUTOMATIC_ASSAULT_RIFLE'_OR_WeaponDescription_=_'MAC-10_SEMIAUTOMATIC_ASSAULT_WEAPON'_OR_WeaponDescription_=_'MAC-11_SEMIAUTOMATIC_ASSAULT_WEAPON'_OR_WeaponDescription_=_'OTHER_FIREARM'_OR_WeaponDescription_=_'RELIC_FIREARM'_OR_WeaponDescription_=_'REVOLVER'_OR_WeaponDescription_=_'RIFLE'_OR_WeaponDescription_=_'SEMI-AUTOMATIC_PISTOL'_OR_WeaponDescription_=_'SEMI-AUTOMATIC_RIFLE'_OR_WeaponDescription_=_'SHOTGUN'_OR_WeaponDescription_=_'STARTER_PISTOL/REVOLVER'_OR_WeaponDescription_=_'UNKNOWN_FIREARM'_OR_WeaponDescription_=_'UNK_TYPE_SEMIAUTOMATIC_ASSAULT_RIFLE'_OR_WeaponDescription_=_'UZI_SEMIAUTOMATIC_ASSAULT_RIFLE')_AND_(EXTRACT(YEAR_FROM_DateReported)_=_2022))_THEN_1_ELSE_0_END)_AS_\"2022\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_DateReported_BETWEEN_'01-JAN-2020'_AND_'31-DEC-2022'_GROUP_BY_TO_CHAR(DateReported,_'YYYY-MM')_ORDER_BY_TO_CHAR(DateReported,_'YYYY-MM')ASC").then(function (jsonData) {
+        async function updateGCChart() {
+            getJSON("SELECT_TO_CHAR(DateReported,_'YYYY-MM')_AS_\"Month\",_SUM(CASE_WHEN_((WeaponDescription_=_'HAND_GUN'_OR_WeaponDescription_=_'ANTIQUE_FIREARM'_OR_WeaponDescription_=_'ASSAULT_WEAPON/UZI/AK47/ETC'_OR_WeaponDescription_=_'AUTOMATIC_WEAPON/SUB-MACHINE_GUN'_OR_WeaponDescription_=_'M1-1_SEMIAUTOMATIC_ASSULT_RIFLE'_OR_WeaponDescription_=_'M-14_SEMIAUTOMATIC_ASSAULT_RIFLE'_OR_WeaponDescription_=_'MAC-10_SEMIAUTOMATIC_ASSAULT_WEAPON'_OR_WeaponDescription_=_'MAC-11_SEMIAUTOMATIC_ASSAULT_WEAPON'_OR_WeaponDescription_=_'OTHER_FIREARM'_OR_WeaponDescription_=_'RELIC_FIREARM'_OR_WeaponDescription_=_'REVOLVER'_OR_WeaponDescription_=_'RIFLE'_OR_WeaponDescription_=_'SEMI-AUTOMATIC_PISTOL'_OR_WeaponDescription_=_'SEMI-AUTOMATIC_RIFLE'_OR_WeaponDescription_=_'SHOTGUN'_OR_WeaponDescription_=_'STARTER_PISTOL/REVOLVER'_OR_WeaponDescription_=_'UNKNOWN_FIREARM'_OR_WeaponDescription_=_'UNK_TYPE_SEMIAUTOMATIC_ASSAULT_RIFLE'_OR_WeaponDescription_=_'UZI_SEMIAUTOMATIC_ASSAULT_RIFLE')_AND_(EXTRACT(YEAR_FROM_DateReported)_=_2020))_THEN_1_ELSE_0_END)_AS_\"2020\",_SUM(CASE_WHEN_((WeaponDescription_=_'HAND_GUN'_OR_WeaponDescription_=_'ANTIQUE_FIREARM'_OR_WeaponDescription_=_'ASSAULT_WEAPON/UZI/AK47/ETC'_OR_WeaponDescription_=_'AUTOMATIC_WEAPON/SUB-MACHINE_GUN'_OR_WeaponDescription_=_'M1-1_SEMIAUTOMATIC_ASSULT_RIFLE'_OR_WeaponDescription_=_'M-14_SEMIAUTOMATIC_ASSAULT_RIFLE'_OR_WeaponDescription_=_'MAC-10_SEMIAUTOMATIC_ASSAULT_WEAPON'_OR_WeaponDescription_=_'MAC-11_SEMIAUTOMATIC_ASSAULT_WEAPON'_OR_WeaponDescription_=_'OTHER_FIREARM'_OR_WeaponDescription_=_'RELIC_FIREARM'_OR_WeaponDescription_=_'REVOLVER'_OR_WeaponDescription_=_'RIFLE'_OR_WeaponDescription_=_'SEMI-AUTOMATIC_PISTOL'_OR_WeaponDescription_=_'SEMI-AUTOMATIC_RIFLE'_OR_WeaponDescription_=_'SHOTGUN'_OR_WeaponDescription_=_'STARTER_PISTOL/REVOLVER'_OR_WeaponDescription_=_'UNKNOWN_FIREARM'_OR_WeaponDescription_=_'UNK_TYPE_SEMIAUTOMATIC_ASSAULT_RIFLE'_OR_WeaponDescription_=_'UZI_SEMIAUTOMATIC_ASSAULT_RIFLE')_AND_(EXTRACT(YEAR_FROM_DateReported)_=_2021))_THEN_1_ELSE_0_END)_AS_\"2021\",_SUM(CASE_WHEN_((WeaponDescription_=_'HAND_GUN'_OR_WeaponDescription_=_'ANTIQUE_FIREARM'_OR_WeaponDescription_=_'ASSAULT_WEAPON/UZI/AK47/ETC'_OR_WeaponDescription_=_'AUTOMATIC_WEAPON/SUB-MACHINE_GUN'_OR_WeaponDescription_=_'M1-1_SEMIAUTOMATIC_ASSULT_RIFLE'_OR_WeaponDescription_=_'M-14_SEMIAUTOMATIC_ASSAULT_RIFLE'_OR_WeaponDescription_=_'MAC-10_SEMIAUTOMATIC_ASSAULT_WEAPON'_OR_WeaponDescription_=_'MAC-11_SEMIAUTOMATIC_ASSAULT_WEAPON'_OR_WeaponDescription_=_'OTHER_FIREARM'_OR_WeaponDescription_=_'RELIC_FIREARM'_OR_WeaponDescription_=_'REVOLVER'_OR_WeaponDescription_=_'RIFLE'_OR_WeaponDescription_=_'SEMI-AUTOMATIC_PISTOL'_OR_WeaponDescription_=_'SEMI-AUTOMATIC_RIFLE'_OR_WeaponDescription_=_'SHOTGUN'_OR_WeaponDescription_=_'STARTER_PISTOL/REVOLVER'_OR_WeaponDescription_=_'UNKNOWN_FIREARM'_OR_WeaponDescription_=_'UNK_TYPE_SEMIAUTOMATIC_ASSAULT_RIFLE'_OR_WeaponDescription_=_'UZI_SEMIAUTOMATIC_ASSAULT_RIFLE')_AND_(EXTRACT(YEAR_FROM_DateReported)_=_2022))_THEN_1_ELSE_0_END)_AS_\"2022\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_DateReported_BETWEEN_'01-JAN-2020'_AND_'31-DEC-2022'_GROUP_BY_TO_CHAR(DateReported,_'YYYY-MM')_ORDER_BY_TO_CHAR(DateReported,_'YYYY-MM')ASC").then(function (jsonData) {
+                //Lock in value just in case
+                let sliderVal = sliderGC.value;
+                for (let i = 0; i < jsonData.results.length; i++) {
+                    let year = parseInt(jsonData.results[i].Month.slice(0, 4));
+                    let mon = parseInt(jsonData.results[i].Month.slice(5));
 
-         });
+                    if (year == sliderVal) {
+                        numGC[mon - 1] = jsonData.results[i][year];
+                    }
+                }
+
+                gcChart.update();
+            });
+        }
+        updateGCChart();
+
+        sliderGC.addEventListener("change", (event) =>{
+            updateGCChart();
+        })
 
 
     }
+
+
 
     TBS = document.getElementById("TBSChart");
     
