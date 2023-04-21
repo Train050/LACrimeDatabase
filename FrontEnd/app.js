@@ -177,47 +177,55 @@ document.addEventListener("DOMContentLoaded", (event) =>{
     CBL = document.getElementById("CBLChart");
 
     if(CBL){
-        const labels = ['January','February','March','April','May','June','July'];
+        const labels = ['Morning', 'Afternoon', 'Evening', 'Night'];
         const data = {
             labels: labels,
             datasets: [{
                 label: 'My First Dataset',
                 data: [65, 59, 80, 81, 56, 55, 40],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 205, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(201, 203, 207, 0.2)'
-                ],
-                borderColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(54, 162, 235)',
-                    'rgb(153, 102, 255)',
-                    'rgb(201, 203, 207)'
-                ],
+                backgroundColor: [colorScheme],
+                borderColor: [colorScheme],
                 borderWidth: 1
             }]
         };
         const config = {
-            type: 'bar',
+            type: 'line',
             data: data,
             options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                    },
+                    title: {
+                        display: true,
+                        text: `Crime By Location`,
+                        font: {
+                            size: 24,
+                        }
+                    },
+                },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Crimes'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time of Day'
+                        }
                     }
+
                 }
             },
         };
         let cblChart = new Chart(CBL, config);
 
-        getJSON("SELECT_PremisDescription_as_\"Premis_Description\",_(CASE_WHEN_TimeOcured_BETWEEN_500_AND_1159_THEN_\'Morning\'_WHEN_TimeOcured_BETWEEN_1200_AND_1659_THEN_\'Afternoon\'_WHEN_TimeOcured_BETWEEN_1700_AND_2059_THEN_\'Evening\'_ELSE_\'Night\'_END)_AS_\"Time_Of_Day\",_COUNT(PremisDescription)_AS_\"Number_of_Crimes\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_PremisDescription_!=_\'0\'_AND_PremisDescription_!=_\'_\'_GROUP_BY_PremisDescription,_(CASE_WHEN_TimeOcured_BETWEEN_500_AND_1159_THEN_\'Morning\'_WHEN_TimeOcured_BETWEEN_1200_AND_1659_THEN_\'Afternoon\'_WHEN_TimeOcured_BETWEEN_1700_AND_2059_THEN_\'Evening\'_ELSE_\'Night\'_END)_ORDER_BY_PremisDescription_ASC,_(CASE_WHEN_TimeOcured_BETWEEN_500_AND_1159_THEN_\'Morning\'_WHEN_TimeOcured_BETWEEN_1200_AND_1659_THEN_\'Afternoon\'_WHEN_TimeOcured_BETWEEN_1700_AND_2059_THEN_\'Evening\'_ELSE_\'Night\'_END)_ASC").then(function (jsonData) {
+        getJSON("SELECT_PremisDescription_as_\"Premis_Description\",_(CASE_WHEN_TimeOcured_BETWEEN_500_AND_1159_THEN_\'Morning\'_WHEN_TimeOcured_BETWEEN_1200_AND_1659_THEN_\'Afternoon\'_WHEN_TimeOcured_BETWEEN_1700_AND_2059_THEN_\'Evening\'_ELSE_\'Night\'_END)_AS_\"Time_Of_Day\",_COUNT(PremisDescription)_AS_\"Number_of_Crimes\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_PremisDescription_!=_\'0\'_AND_PremisDescription_!=_\'_\'_GROUP_BY_PremisDescription,_(CASE_WHEN_TimeOcured_BETWEEN_500_AND_1159_THEN_\'Morning\'_WHEN_TimeOcured_BETWEEN_1200_AND_1659_THEN_\'Afternoon\'_WHEN_TimeOcured_BETWEEN_1700_AND_2059_THEN_\'Evening\'_ELSE_\'Night\'_END)_ORDER_BY_\"Number_of_Crimes\"_DESC_PremisDescription_ASC,_(CASE_WHEN_TimeOcured_BETWEEN_500_AND_1159_THEN_\'Morning\'_WHEN_TimeOcured_BETWEEN_1200_AND_1659_THEN_\'Afternoon\'_WHEN_TimeOcured_BETWEEN_1700_AND_2059_THEN_\'Evening\'_ELSE_\'Night\'_END)_ASC").then(function (jsonData) {
 
 
         });
@@ -447,9 +455,3 @@ document.addEventListener("DOMContentLoaded", (event) =>{
 
     }
 });
-
-        /*
-        getJSON("SELECT_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)_AS_\"Quarter\",_COUNT(*)_AS_\"Total_Petty_Theft\",_(COUNT(*)_-_LAG(COUNT(*),_1)_OVER_(ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)))_/_NULIF(LAG(COUNT(*),_1)_OVER_(ORDER_BY_CONCAT(\'Q\',_FLOOR((EXTRACT(MONTH_FROM_DateReported)_-_1)_/_3)_+_1)),_0)_*_100_AS_\"Percent_Change\"_FROM_\"KEEGAN.SEPIOL\".\"CRIMEDATA\"_WHERE_CrimeDescription_=_\'SHOPLIFTING_-_PETTY_THEFT_($950_&_UNDER)\'_OR_CrimeDescription_=_\'PETTY_THEFT_-_AUTO_REPAIR\'_OR_CrimeDescription_=_\'\'").then(function (jsonData) {
-
-        });
-        */
