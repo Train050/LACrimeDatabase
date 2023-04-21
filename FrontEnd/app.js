@@ -340,18 +340,18 @@ document.addEventListener("DOMContentLoaded", (event) =>{
         }
         updateFVChart();
 
-        weekCheck.addEventListener('change', (event) => {
+        weekCheck.addEventListener('input', (event) => {
             fvChart.setDatasetVisibility(0, weekCheck.checked);
             fvChart.update();
         });
 
-        monthCheck.addEventListener('change', (event) => {
+        monthCheck.addEventListener('input', (event) => {
             fvChart.setDatasetVisibility(1, weekCheck.checked);
             fvChart.update();
         });
 
 
-        seasonCheck.addEventListener('change', (event) => {
+        seasonCheck.addEventListener('input', (event) => {
             fvChart.setDatasetVisibility(2, weekCheck.checked);
             fvChart.update();
         });

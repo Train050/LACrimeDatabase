@@ -46,10 +46,17 @@
 				<h1><u>Crime by Location</u></h1>
 				<p>Here is a paragraph about crime data trends</p>
 				<div>
-					<span>1:00</span>
-					<span style="float:right;">24:00</span>
+
 				</div>
-				<input type="range" min="1" max="24" value="1" class="slider" id="CrimeByLocal_Input">
+				<form name="CrimeByLocation_Form">
+					<select name="CrimeByLocation_Input" id="CrimeByLocation_Input" onchange="this.form.submit()">
+						<option value="Morning">Morning</option>
+						<option value="Afternoon">Afternoon</option>
+						<option value="Evening">Evening</option>
+						<option value="Night">Night</option>
+
+					</select>
+				</form>
 			</div>
 			<div class="grid__content">
 				<canvas id="CBLChart" style="background-color: #38445E"></canvas>
